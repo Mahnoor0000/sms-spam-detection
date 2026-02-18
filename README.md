@@ -1,132 +1,65 @@
-# 📩 SMS Spam Detection (Streamlit + Scikit-Learn + NLTK)
+# 📩 SMS Spam Detection App
 
-A simple **Email/SMS Spam Classifier** built using:
-- **Text preprocessing** (NLTK tokenization, stopword removal, punctuation removal, stemming)
-- **TF-IDF vectorization**
-- Multiple **machine learning classifiers** (Naive Bayes, SVC, Logistic Regression, Random Forest, etc.)
-- A clean **Streamlit UI** for prediction
+A Machine Learning based **Email/SMS Spam Classifier** built using  
+Scikit-learn, NLTK, TF-IDF, and deployed with Streamlit.
 
 ---
 
-## ✅ Project Features
-- Loads and cleans the popular `spam.csv` dataset
-- Converts labels (`ham/spam`) into numeric format using **LabelEncoder**
-- Preprocesses messages using:
-  - lowercasing
-  - tokenization
-  - removing non-alphanumeric tokens
-  - removing stopwords & punctuation
-  - stemming (PorterStemmer)
-- Converts text to numeric features using **TF-IDF**
-- Trains multiple ML models and compares them using:
-  - **Accuracy**
-  - **Precision** (important for spam detection)
-- Saves the trained **vectorizer** + **model** as `.pkl`
-- Predicts spam/ham through a **Streamlit app**
+## 🚀 Features
+- Text preprocessing using:
+  - Lowercasing
+  - Tokenization (NLTK)
+  - Stopword removal
+  - Punctuation removal
+  - Stemming (PorterStemmer)
+- TF-IDF vectorization
+- Trained and evaluated using multiple classifiers
+- Interactive Streamlit UI for predictions
 
 ---
 
-## 📂 Dataset
-This project uses a CSV dataset named:
+## 🤖 Model Selection
 
-- `spam.csv`
+Multiple classifiers were tested, including:
 
-Typical columns in this dataset:
-- `v1` → label (`ham` or `spam`)
-- `v2` → text message
-- extra columns like `Unnamed: 2`, `Unnamed: 3`, `Unnamed: 4` (removed)
+- Support Vector Machine (SVC)
+- K-Nearest Neighbors
+- Decision Tree
+- Logistic Regression
+- Random Forest
+- AdaBoost
+- Gradient Boosting
+- XGBoost
+- Multinomial Naive Bayes
 
----
+After comparison using **Accuracy and Precision**,  
+**Multinomial Naive Bayes was selected** because it achieved:
 
-## 🧹 Data Cleaning Steps
-1. Load CSV using correct encoding:
-   - `latin-1` (common for this dataset)
-2. Drop unused columns:
-   - `Unnamed: 2`, `Unnamed: 3`, `Unnamed: 4`
-3. Rename:
-   - `v1 → target`
-   - `v2 → text`
-4. Encode labels:
-   - `ham = 0`
-   - `spam = 1`
+✅ **Precision = 1.0**
 
----
-
-## 🧠 Text Preprocessing (Transform Function)
-
-The function used converts raw message into cleaned/stemmed words:
-
-### Steps:
-1. Convert to lowercase
-2. Tokenize words (`nltk.word_tokenize`)
-3. Keep only alphanumeric tokens
-4. Remove stopwords (English) + punctuation
-5. Apply stemming using **PorterStemmer**
-6. Join back into a cleaned sentence
+Since spam detection requires minimizing false positives  
+(real messages incorrectly marked as spam),  
+Naive Bayes performed best for this task.
 
 ---
 
-## 🔢 Vectorization (TF-IDF)
-The project uses:
-
-- `TfidfVectorizer(max_features=3000)`
-
-This converts text into TF-IDF numeric vectors for model training.
-
----
-
-## ✂️ Train/Test Split
-Data is split into:
-
-- `80% training`
-- `20% testing`
-
-Using:
-
-- `train_test_split(test_size=0.2, random_state=2)`
+## 📂 Project Workflow
+1. Load and clean `spam.csv`
+2. Encode labels (`ham = 0`, `spam = 1`)
+3. Preprocess text
+4. Convert text to TF-IDF features
+5. Train/Test split (80/20)
+6. Train and compare multiple models
+7. Select best model (Naive Bayes)
+8. Save:
+   - `vectorizer.pkl`
+   - `model.pkl`
+9. Use Streamlit to predict Spam / Not Spam
 
 ---
 
-## 🤖 Models Used
-Multiple classifiers were tested (examples):
 
-- `SVC(kernel='sigmoid', gamma=1.0)`
-- `KNeighborsClassifier()`
-- `MultinomialNB()`
-- `DecisionTreeClassifier(max_depth=5)`
-- `LogisticRegression(solver='liblinear', penalty='l1')`
-- `RandomForestClassifier(n_estimators=50, random_state=2)`
-- `AdaBoostClassifier(n_estimators=50, random_state=2)`
-- `BaggingClassifier(n_estimators=50, random_state=2)`
-- `ExtraTreesClassifier(n_estimators=50, random_state=2)`
-- `GradientBoostingClassifier(n_estimators=50, random_state=2)`
-- `XGBClassifier(n_estimators=50, random_state=2)` *(optional)*
+.venv\Scripts\activate
 
----
 
-## 📊 Evaluation Metrics
-Each model was evaluated using:
 
-- **Accuracy**
-- **Precision**
-
-Precision is important because:
-- False positive = real message marked as spam (bad)
-So higher precision means more reliable spam detection.
-
----
-
-## 💾 Saving Model + Vectorizer
-The notebook saves both files using pickle:
-
-- `vectorizer.pkl` → TF-IDF object
-- `model.pkl` → trained ML model (example: MultinomialNB)
-
-✅ **Important:** Always save a **FITTED** model (trained with `.fit()`)
-
-Example saving:
-
-```python
-import pickle
-pickle.dump(tfidf, open('vectorizer.pkl','wb'))
-pickle.dump(model, open('model.pkl','wb'))  # model must be fitted
