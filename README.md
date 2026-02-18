@@ -59,7 +59,5 @@ Naive Bayes performed best for this task.
 ---
 
 
-.venv\Scripts\activate
-
 
 
